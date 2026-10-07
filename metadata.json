@@ -1,0 +1,6 @@
+{
+  "name": "StudyBiz OS",
+  "description": "Personal productivity OS for Class 9 SSC prep and dropshipping business management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
