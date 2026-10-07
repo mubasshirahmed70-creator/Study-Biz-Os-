@@ -19,26 +19,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Decode Debug Keystore
+      - name: Prepare Signing Keystore
         run: |
           if [ -f debug.keystore.base64 ]; then
             echo "Decoding debug.keystore from base64..."
             base64 -d debug.keystore.base64 > debug.keystore
-          elif [ ! -f debug.keystore ]; then
+          else
             echo "Generating new debug.keystore..."
             keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
           fi
 
-      - name: Configure Environment File (.env)
+      - name: Prepare Environment File (.env)
         run: |
           touch .env
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
@@ -47,7 +47,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK with Gradle
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --no-build-cache --no-configuration-cache --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
