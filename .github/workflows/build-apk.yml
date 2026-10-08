@@ -40,8 +40,12 @@ jobs:
 
       - name: Prepare Environment File (.env)
         run: |
-          touch .env
-          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+          KEY_VAL="${{ secrets.GEMINI_API_KEY }}"
+          if [ -z "$KEY_VAL" ]; then
+            KEY_VAL="AIzaSyDummyKeyForBuildValidationOnly"
+          fi
+          echo "GEMINI_API_KEY=$KEY_VAL" > .env
+          echo "Created .env successfully"
 
       - name: Grant Execute Permission to Gradlew
         run: chmod +x gradlew
